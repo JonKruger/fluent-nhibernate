@@ -1,7 +1,6 @@
 using System;
 using System.Linq.Expressions;
-using System.Reflection;
-using FluentNHibernate.Conventions.InspectionDsl;
+using FluentNHibernate.Conventions.Inspections;
 
 namespace FluentNHibernate.Conventions.AcceptanceCriteria
 {
@@ -18,8 +17,8 @@ namespace FluentNHibernate.Conventions.AcceptanceCriteria
 
         public bool IsSatisfiedBy<T>(Expression<Func<T, object>> propertyExpression, T inspector) where T : IInspector
         {
-            var compiledFunc = propertyExpression.Compile();
-            var actualValue = compiledFunc(inspector);
+            var func = propertyExpression.Compile();
+            var actualValue = func(inspector);
             var result = actualValue.Equals(value);
 
             return (inverse) ? !result : result;

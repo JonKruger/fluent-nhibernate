@@ -1,21 +1,21 @@
-﻿using FluentNHibernate.Conventions.Helpers.Prebuilt;
+using FluentNHibernate.Conventions.Helpers.Prebuilt;
 
 namespace FluentNHibernate.Conventions.Helpers
 {
     public static class DefaultLazy
     {
-        public static IClassConvention AlwaysTrue()
+        public static IHibernateMappingConvention Always()
         {
-            return new BuiltClassConvention(
-                map => true,
-                map => map.SetHibernateMappingAttribute("default-lazy", "true"));
+            return new BuiltHibernateMappingConvention(
+                criteria => { },
+                instance => instance.DefaultLazy());
         }
 
-        public static IClassConvention AlwaysFalse()
+        public static IHibernateMappingConvention Never()
         {
-            return new BuiltClassConvention(
-                map => true,
-                map => map.SetHibernateMappingAttribute("default-lazy", "false"));
+            return new BuiltHibernateMappingConvention(
+                criteria => { },
+                instance => instance.Not.DefaultLazy());
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace FluentNHibernate.Conventions
 {
@@ -11,6 +12,11 @@ namespace FluentNHibernate.Conventions
     {
         private readonly ConventionsCollection conventions = new ConventionsCollection();
 
+        public DefaultConventionFinder()
+        {
+            
+        }
+
         /// <summary>
         /// Find any conventions implementing T.
         /// </summary>
@@ -18,10 +24,8 @@ namespace FluentNHibernate.Conventions
         /// <returns>IEnumerable of T</returns>
         public IEnumerable<T> Find<T>() where T : IConvention
         {
-            foreach (var type in conventions)
+            foreach (var type in conventions.Where(x => typeof(T).IsAssignableFrom(x)))
             {
-                if (!typeof(T).IsAssignableFrom(type)) continue;
-
                 foreach (var instance in conventions[type])
                 {
                     yield return (T)instance;
@@ -81,6 +85,13 @@ namespace FluentNHibernate.Conventions
             Add(type, MissingConstructor.Throw);
         }
 
+        public void Add(Type type, object instance)
+        {
+            if (conventions.Contains(type) && !AllowMultiplesOf(type)) return;
+
+            conventions.Add(type, instance);
+        }
+
         /// <summary>
         /// Add an instance of a convention.
         /// </summary>
@@ -100,6 +111,8 @@ namespace FluentNHibernate.Conventions
         {
             if (missingConstructor == MissingConstructor.Throw && !HasValidConstructor(type))
                 throw new MissingConstructorException(type);
+            if (missingConstructor == MissingConstructor.Ignore && !HasValidConstructor(type))
+                return;
 
             if (conventions.Contains(type) && !AllowMultiplesOf(type)) return;
 

@@ -1,5 +1,5 @@
-using FluentNHibernate.Conventions.InspectionDsl;
-using FluentNHibernate.Mapping;
+using FluentNHibernate.Conventions.Instances;
+using FluentNHibernate.Conventions.Inspections;
 
 namespace FluentNHibernate.Conventions
 {
@@ -7,6 +7,6 @@ namespace FluentNHibernate.Conventions
     /// Convention for a single class mapping. Implement this interface to apply
     /// changes to class mappings.
     /// </summary>
-    public interface IClassConvention : IConvention<IClassInspector>
+    public interface IClassConvention : IConvention<IClassInspector, IClassInstance>
     {}
 }

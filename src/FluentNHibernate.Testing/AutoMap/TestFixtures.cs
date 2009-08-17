@@ -1,10 +1,11 @@
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Data;
 using System.Drawing;
-using FluentNHibernate.AutoMap.TestFixtures.ComponentTypes;
-using FluentNHibernate.AutoMap.TestFixtures.CustomCompositeTypes;
-using FluentNHibernate.AutoMap.TestFixtures.CustomTypes;
+using FluentNHibernate.Automapping.TestFixtures.ComponentTypes;
+using FluentNHibernate.Automapping.TestFixtures.CustomCompositeTypes;
+using FluentNHibernate.Automapping.TestFixtures.CustomTypes;
 using FluentNHibernate.Mapping;
 using FluentNHibernate.Conventions;
 using Iesi.Collections.Generic;
@@ -14,7 +15,7 @@ using NHibernate.SqlTypes;
 using NHibernate.Type;
 using NHibernate.UserTypes;
 
-namespace FluentNHibernate.AutoMap.TestFixtures
+namespace FluentNHibernate.Automapping.TestFixtures
 {
     public abstract class EntityBase<TPK>
     {
@@ -43,8 +44,26 @@ namespace FluentNHibernate.AutoMap.TestFixtures
     {
         public string ExampleProperty { get; set; }
         public int SomeNumber{ get; set; }
+        public IList<ExampleClass> Children { get; private set; }
+        public ExampleParentClass Component { get; set; }
+        public IDictionary DictionaryChild { get; set; }
     }
 
+    public class ClassWithDummyProperty
+    {
+        public virtual int Id { get; set; }
+        public virtual string Dummy { get; set; }
+        public virtual string Dummy1 { get; set; }
+        public virtual string Dummy2 { get; set; }
+    }
+
+    public class AnotherClassWithDummyProperty
+    {
+        public virtual int Id { get; set; }
+        public virtual string Dummy { get; set; }
+        public virtual string Dummy1 { get; set; }
+        public virtual string Dummy2 { get; set; }
+    }
 
     public class ExampleClass
     {
@@ -54,6 +73,7 @@ namespace FluentNHibernate.AutoMap.TestFixtures
         public TimeSpan Timestamp { get; set; }
         public ExampleEnum Enum { get; set; }
         public ExampleParentClass Parent { get; set; }
+        public IDictionary Dictionary { get; set; }
     }
 
     public class PrivateIdSetterClass
@@ -128,9 +148,29 @@ namespace FluentNHibernate.AutoMap.TestFixtures
         public virtual int Id { get; set; }
         public virtual Bitmap Bitmap { get; set; }
     }
+
+    public class ClassWithGuidId
+    {
+        public virtual Guid Id { get; set; }
+    }
+
+    public class ClassWithIntId
+    {
+        public virtual int Id { get; set; }
+    }
+
+    public class ClassWithLongId
+    {
+        public virtual long Id { get; set; }
+    }
+
+    public class ClassWithStringId
+    {
+        public virtual string Id { get; set; }
+    }
 }
 
-namespace FluentNHibernate.AutoMap.TestFixtures.ComponentTypes
+namespace FluentNHibernate.Automapping.TestFixtures.ComponentTypes
 {
     public class Address
     {
@@ -140,7 +180,7 @@ namespace FluentNHibernate.AutoMap.TestFixtures.ComponentTypes
     }
 }
 
-namespace FluentNHibernate.AutoMap.TestFixtures.CustomTypes
+namespace FluentNHibernate.Automapping.TestFixtures.CustomTypes
 {
     public class Custom
     {
@@ -209,7 +249,7 @@ namespace FluentNHibernate.AutoMap.TestFixtures.CustomTypes
     }
 }
 
-namespace FluentNHibernate.AutoMap.TestFixtures.CustomCompositeTypes
+namespace FluentNHibernate.Automapping.TestFixtures.CustomCompositeTypes
 {
     public class DoubleStringType : ICompositeUserType
     {
@@ -409,7 +449,7 @@ namespace FluentNHibernate.AutoMap.TestFixtures.CustomCompositeTypes
 
 }
 
-namespace FluentNHibernate.AutoMap.TestFixtures.SuperTypes
+namespace FluentNHibernate.Automapping.TestFixtures.SuperTypes
 {
     public class SuperType
     {

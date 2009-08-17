@@ -4,79 +4,82 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using FluentNHibernate.AutoMap;
+using FluentNHibernate.Automapping;
 using FluentNHibernate.Mapping;
+using FluentNHibernate.MappingModel.ClassBased;
 using FluentNHibernate.Utils;
 using NUnit.Framework;
 using System.Linq.Expressions;
 
-namespace FluentNHibernate.Testing.AutoMap
+namespace FluentNHibernate.Testing.Automapping
 {
     [TestFixture]
     public class PrivateAutoMappingTester
     {
         private AutoPersistenceModel model;
 
-        private class ExampleClass
-        {
-            private string _privateProperty { get; set; }
-
-            public class PrivateProperties
-            {
-                public static Expression<Func<ExampleClass, object>> Property = x => x._privateProperty;
-            }
-        }
-
-        private class ExampleParent
-        {
-            private IList<ExampleClass> _privateChildren { get; set; }
-
-            public class PrivateProperties
-            {
-                public static Expression<Func<ExampleParent, object>> Children = x => x._privateChildren;
-            }
-        }
-
         [Test]
         public void WillMapPrivatePropertyMatchingTheConvention()
         {
-            Model<ExampleClass>(p => p.Name.StartsWith("_"));
+            Model<PrivateExampleClass>(p => p.Name.StartsWith("_"));
 
-            Test<ExampleClass>(mapping =>
-                Assert.Contains(ReflectionHelper.GetProperty(ExampleClass.PrivateProperties.Property), (ICollection)mapping.PropertiesMapped));
+            Test<PrivateExampleClass>(mapping =>
+                mapping.Properties.ShouldContain(x => x.PropertyInfo == ReflectionHelper.GetProperty(PrivateExampleClass.PrivateProperties.Property)));
         }
 
         [Test]
         public void DoNotMapPrivatePropertiesThatDoNotMatchConvention()
         {
-            Model<ExampleClass>(p => p.Name.StartsWith("asdf"));
+            Model<PrivateExampleClass>(p => p.Name.StartsWith("asdf"));
 
-            Test<ExampleClass>(mapping =>
-                mapping.PropertiesMapped.ShouldBeEmpty());
+            Test<PrivateExampleClass>(mapping =>
+                mapping.Properties.ShouldBeEmpty());
         }
 
         [Test]
         public void CanMapPrivateCollection()
         {
-            Model<ExampleParent>(p => p.Name.StartsWith("_"));
+            Model<PrivateExampleParent>(p => p.Name.StartsWith("_"));
 
-            Test<ExampleParent>(mapping =>
-                Assert.Contains(ReflectionHelper.GetProperty(ExampleParent.PrivateProperties.Children), (ICollection)mapping.PropertiesMapped));
+            Test<PrivateExampleParent>(mapping =>
+                mapping.Collections.ShouldContain(x => x.MemberInfo == ReflectionHelper.GetProperty(PrivateExampleParent.PrivateProperties.Children)));
         }
 
         private void Model<T>(Func<PropertyInfo, bool> convention)
         {
             model = new PrivateAutoPersistenceModel()
-                .WithSetup(conventions => conventions.FindMappablePrivateProperties = convention);
+                .Setup(conventions => conventions.FindMappablePrivateProperties = convention);
 
-            model.AutoMap<T>();
+            model.AddTypeSource(new StubTypeSource(typeof(T)));
+            model.CompileMappings();
+            model.BuildMappings();
         }
 
-        private void Test<T>(Action<AutoMap<T>> mapping)
+        private void Test<T>(Action<ClassMapping> mapping)
         {
             var map = model.FindMapping<T>();
 
-            mapping((AutoMap<T>)map);
+            mapping(map.GetClassMapping());
+        }
+    }
+
+    internal class PrivateExampleParent
+    {
+        private IList<PrivateExampleClass> _privateChildren { get; set; }
+
+        public class PrivateProperties
+        {
+            public static Expression<Func<PrivateExampleParent, object>> Children = x => x._privateChildren;
+        }
+    }
+
+    internal class PrivateExampleClass
+    {
+        private string _privateProperty { get; set; }
+
+        public class PrivateProperties
+        {
+            public static Expression<Func<PrivateExampleClass, object>> Property = x => x._privateProperty;
         }
     }
 }

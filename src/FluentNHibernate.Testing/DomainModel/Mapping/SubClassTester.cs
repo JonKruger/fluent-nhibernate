@@ -1,3 +1,6 @@
+using System;
+using FluentNHibernate.Conventions;
+using FluentNHibernate.Conventions.Instances;
 using FluentNHibernate.Mapping;
 using NUnit.Framework;
 
@@ -29,16 +32,13 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         }
 
         [Test]
-        public void CreateTheSubClassMappings()
+        public void ShouldSetTheName()
         {
             new MappingTester<MappedObject>()
                 .ForMapping(map =>
                     map.DiscriminateSubClassesOnColumn<string>("Type")
                         .SubClass<SecondMappedObject>("red", sc => { }))
-                .Element("//subclass")
-                    .Exists()
-                    .HasAttribute("name", typeof(SecondMappedObject).AssemblyQualifiedName)
-                    .HasAttribute("discriminator-value", "red");
+                .Element("//subclass").HasAttribute("name", typeof(SecondMappedObject).AssemblyQualifiedName);
         }
 
         [Test]
@@ -250,16 +250,6 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
         }
 
         [Test]
-        public void MapsVersion()
-        {
-            new MappingTester<MappedObject>()
-                .ForMapping(map =>
-                    map.DiscriminateSubClassesOnColumn<string>("Type")
-                        .SubClass<MappedObject>(sc => sc.Version(x => x.Version)))
-                .Element("//subclass/version").Exists();
-        }
-
-        [Test]
         public void SubclassShouldNotHaveDiscriminator()
         {
             new MappingTester<MappedObject>()
@@ -377,20 +367,9 @@ namespace FluentNHibernate.Testing.DomainModel.Mapping
             new MappingTester<MappedObject>()
                 .ForMapping(map =>
                     map.DiscriminateSubClassesOnColumn("Type")
-                        .WithLengthOf(1234))
+                        .Length(1234))
                 .Element("class/discriminator")
                     .HasAttribute("length", "1234");
-        }
-
-        [Test]
-        public void CanSpecifyCustomAttributeOnDiscriminator()
-        {
-            new MappingTester<MappedObject>()
-                .ForMapping(map =>
-                    map.DiscriminateSubClassesOnColumn("Type")
-                        .SetAttribute("attr", "value"))
-                .Element("class/discriminator")
-                    .HasAttribute("attr", "value");
         }
 
         private class ProxyClass
