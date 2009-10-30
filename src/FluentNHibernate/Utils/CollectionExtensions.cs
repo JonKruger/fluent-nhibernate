@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace FluentNHibernate.Utils
 {
-    public static class CollectionExtensions
+    internal static class CollectionExtensions
     {
         [DebuggerStepThrough]
         public static void Each<T>(this IEnumerable<T> enumerable, Action<T> each)

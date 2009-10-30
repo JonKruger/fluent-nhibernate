@@ -20,6 +20,11 @@ namespace FluentNHibernate.Conventions.Instances
             this.mapping = mapping;
         }
 
+        public bool CascadeIsSpecified
+        {
+            get { return mapping.IsSpecified("Cascade"); }
+        }
+
         public new IRelationshipInstance Relationship
         {
             get

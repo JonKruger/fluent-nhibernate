@@ -132,5 +132,26 @@ namespace FluentNHibernate.Testing.MappingModel
 
             visitor.VerifyAllExpectations();     
         }
-    }
+
+        [Test]
+        public void Mutable_should_return_true_if_not_set()
+        {
+            var classMap = new ClassMapping { Name = "class1" };
+            classMap.Mutable.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Mutable_should_return_true_if_set_to_true()
+        {
+            var classMap = new ClassMapping { Name = "class1", Mutable = true};
+            classMap.Mutable.ShouldBeTrue();
+        }
+
+        [Test]
+        public void Mutable_should_return_false_if_set_to_false()
+        {
+            var classMap = new ClassMapping { Name = "class1", Mutable = false };
+            classMap.Mutable.ShouldBeFalse();
+        }
+ }
 }

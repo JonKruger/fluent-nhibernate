@@ -153,6 +153,14 @@ namespace FluentNHibernate.Testing.ConventionsTests.ApplyingToModel
         }
 
         [Test]
+        public void ShouldSetOnDeleteProperty()
+        {
+            Convention(x => x.Key.OnDelete("xxx"));
+
+            VerifyModel(x => x.Key.OnDelete.ShouldEqual("xxx"));
+        }
+
+        [Test]
         public void ShouldSetTableNameProperty()
         {
             Convention(x => x.Table("xxx"));

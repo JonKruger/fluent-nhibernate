@@ -18,6 +18,11 @@ namespace FluentNHibernate.Conventions.Instances
             this.mapping = mapping;
         }
 
+        public bool CascadeIsSpecified
+        {
+            get { return mapping.IsSpecified("Cascade"); }
+        }
+
         new public IIndexInstanceBase Index
         {
             get
