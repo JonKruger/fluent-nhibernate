@@ -24,6 +24,7 @@ namespace FluentNHibernate.Conventions.Instances
         new ICollectionCascadeInstance Cascade { get; }
         new IFetchInstance Fetch { get; }
         new IOptimisticLockInstance OptimisticLock { get; }
+        bool CascadeIsSpecified { get; }
         void Check(string constraint);
         void CollectionType<T>();
         void CollectionType(string type);

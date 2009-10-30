@@ -186,6 +186,16 @@ namespace FluentNHibernate.Testing.ConventionsTests.OverridingFluentInterface
         }
 
         [Test]
+        public void OnDeleteShouldntBeOverwritten()
+        {
+            Mapping(x => x.Children, x => x.ForeignKeyCascadeOnDelete());
+
+            Convention(x => x.Key.OnDelete("xxx"));
+
+            VerifyModel(x => x.Key.OnDelete.ShouldEqual("cascade"));
+        }
+
+        [Test]
         public void TableNameShouldntBeOverwritten()
         {
             Mapping(x => x.Children, x => x.Table("table"));

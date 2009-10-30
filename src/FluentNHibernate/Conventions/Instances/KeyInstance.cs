@@ -35,6 +35,12 @@ namespace FluentNHibernate.Conventions.Instances
                 mapping.ForeignKey = constraint;
         }
 
+        public void OnDelete(string value)
+        {
+            if (!mapping.IsSpecified("OnDelete"))
+                mapping.OnDelete = value;
+        }
+
         public new IEnumerable<IColumnInstance> Columns
         {
             get

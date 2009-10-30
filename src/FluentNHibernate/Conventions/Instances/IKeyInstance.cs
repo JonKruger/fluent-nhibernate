@@ -7,6 +7,7 @@ namespace FluentNHibernate.Conventions.Instances
     {
         void Column(string columnName);
         void ForeignKey(string constraint);
+        void OnDelete(string value);
         new IEnumerable<IColumnInspector> Columns { get; }
     }
 }

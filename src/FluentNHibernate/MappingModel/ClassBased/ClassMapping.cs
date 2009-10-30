@@ -110,7 +110,7 @@ namespace FluentNHibernate.MappingModel.ClassBased
 
         public bool Mutable
         {
-            get { return attributes.Get(x => x.Mutable); }
+            get { return attributes.IsSpecified(x => x.Mutable) ? attributes.Get(x => x.Mutable) : true; }
             set { attributes.Set(x => x.Mutable, value); }
         }
 
