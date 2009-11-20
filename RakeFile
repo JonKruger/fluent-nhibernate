@@ -20,7 +20,7 @@ desc "**Default**, compiles and runs tests"
 task :default => [:use_nhib_21, :compile, :unit_test]
 
 desc "Builds Fluent NHibernate against the NHibernate trunk libs (instead of the normal NHibernate 2.1GA)"
-task :nhibtrunk =>[:use_nhib_trunk, :compile, :unit_test, :use_nhib_201]
+task :nhibtrunk =>[:use_nhib_trunk, :compile, :unit_test, :use_nhib_21]
 
 desc "Switches NHibernate dependencies to NHibernate 2.1"
 task :use_nhib_21 do
